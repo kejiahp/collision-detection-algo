@@ -56,7 +56,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\popoo\Desktop\SchoolWork\collision-detection-algo\include;..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -86,12 +86,16 @@
     <ClCompile Include="..\src\app.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Particle.cpp" />
-    <ClCompile Include="..\src\sphereJK_OO_basic.cpp" />
+    <ClCompile Include="..\src\sphereJK_OO.cpp" />
+	<ClCompile Include="..\src\custom_color.cpp" />
+	<ClCompile Include="..\src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\app.h" />
     <ClInclude Include="..\include\coreMath.h" />
     <ClInclude Include="..\include\particle.h" />
+    <ClInclude Include="..\include\custom_color.hpp" />
+	<ClInclude Include="..\include\utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
