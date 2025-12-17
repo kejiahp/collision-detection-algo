@@ -6,12 +6,13 @@
 #include <app.h>// OpenGL toolkit
 #include "particle.h"
 #include <iostream> 
+#include <string>
 
+static constexpr int NO_OF_PARTICLES = 3;
 
-using namespace std;
 class SphereDemo : public Application
 {
-	Particle particles[5];
+	Particle particles[NO_OF_PARTICLES];
 public:
 	SphereDemo();
 	virtual void display();
@@ -58,14 +59,48 @@ SphereDemo::SphereDemo()
 	// the starting width and heigh of th indow should always be 100
 	width = 100; height = 100;
 
-	for (Particle &p : particles) {
-		p.setRandomRadius(width, height);
-		p.setRandomPosition(p.getRadius(), width, height);
+	//for (Particle& p : particles) {
+	for (int i = 0; i < sizeof(particles) / sizeof(Particle); ++i) {
+		Particle& p = particles[i];
+
 		p.setRandomColor();
-		p.setRandomVelocity(static_cast<float>(width));
+		p.setVelocity(0, 0);
+		p.setAcceleration(0, 0);
+
+		if ((i + 1) == 3) {
+			p.setRadius(15);
+			p.setMass(p.computeMassFromRadius(p.getRadius()));
+			p.setPosition(width - (p.getRadius() + 1), height - (p.getRadius() + 1));
+		}
+		else if ((i + 1) == 2) {
+			p.setRadius(10);
+			p.setMass(p.computeMassFromRadius(p.getRadius()));
+			p.setPosition(0, height - (p.getRadius() + 1));
+		} 
+		else {
+			p.setRadius(30);
+			p.setMass(p.computeMassFromRadius(p.getRadius()));
+			p.setPosition(-width + (p.getRadius() + 1), height - (p.getRadius() + 1));
+		}
+
+		//if ((i + 1) != 2) {
+		//p.setRadius(10);
+		//p.setMass(1);
+		//p.setPosition(width - (p.getRadius() + 1), height - (p.getRadius() + 1));
+		//}
+		//else {
+		//p.setRadius(20);
+		//p.setMass(5);
+		//p.setPosition(-width + (p.getRadius() + 1), height - (p.getRadius() + 1));
+		//}
+
+
+		//p.setRandomRadius(width, height);
+		//p.setRandomColor();
+		//p.setRandomPosition(p.getRadius(), width, height);
+		//p.setRandomVelocity(static_cast<float>(width));
 	}
 }
-
 
 bool SphereDemo::out_of_box_test(Particle p, int boundaryWidth, int boundaryHeight) {
 	Vector2 pos = p.getPosition();
@@ -113,6 +148,12 @@ void SphereDemo::update(void)
 {	
 	for (Particle& p : particles) {
 		float duration = timeinterval / 1000;
+		
+		p.addForce(p.getGravityForce());
+		Vector2 drag = p.getDragForce();
+		std::cout << "radius: " + std::to_string(p.getRadius()) + " mass: " + std::to_string(p.getMass()) + " bottompos: " + std::to_string(p.getPosition().y - p.getRadius()) + " speed: " + std::to_string(p.getVelocity().magnitude()) << "drag x: " << drag.x << " drag y: " << drag.y << std::endl;
+		p.addForce(drag);
+		
 		p.integrate(duration);
 		box_boundary_collision_resolve(p, width, height);
 		if (out_of_box_test(p, width, height)) {

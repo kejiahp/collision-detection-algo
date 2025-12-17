@@ -259,4 +259,4 @@ class Vector2
 
 
 
-	#endif // CYCLONE_CORE_H
+#endif // CORE_MATH
