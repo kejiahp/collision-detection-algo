@@ -15,9 +15,11 @@ class Particle
     protected:
      Vector2 position;
 	 Vector2 velocity;
-	 //Vector2 acceleration;
-    // float damping;
+	 Vector2 acceleration;
+	 Vector2 forceAccum;  // Represents the accumulation of the various forces acting on the particle e.g. gravity
+     float damping; // Don't use this, use the `getDragForce` method, add the returned force to the accumulator on each render
 	 float radius;
+	 float inverseMass;
 	 customcolor::Color color;
 	 
       public:
@@ -30,10 +32,55 @@ class Particle
 		void setVelocity(const float x, const float y);
 		Vector2 getVelocity() const;
 
-		////void setAcceleration(const float x, const float y);
-		////Vector2 getAcceleration() const;
-	    //void setDamping(const float damping);
-         //     float getDamping() const;
+		void setAcceleration(const Vector2& newAcceleration);
+		void setAcceleration(const float x, const float y);
+		Vector2 getAcceleration() const;
+
+		/**
+		* @brief Clear the D'Alembert accumulator
+		*/
+		void clearAccumulator();
+
+		/**
+		* @brief Adds a force to the D'Alembert accumulator
+		*/
+		void addForce(const Vector2& force);
+
+		/**
+		* @brief Calculate and return the drag force acting on the particle.
+		* 
+		* The drag magnitude is calculated using this formula `Fdrag = -k1 * |V| - k2 * |V|^2`
+		* 
+		* @return `Vector2` the drag force.
+		*/
+		Vector2 getDragForce();
+
+		/**
+		* // Don't use this, use the `getDragForce` method, add the returned force to the accumulator on each render.
+		* 
+		* @brief Set the damping force simulation air resistance
+		* 
+		* @param damping the dampling value within the range of 0-1. The lower the value, the more damping force.
+		*/
+	    void setDamping(const float damping);
+
+		/**
+		* // Don't use this, use the `getDragForce` method, add the returned force to the accumulator on each render.
+		* 
+		* @brief Get the damping force
+		*/
+        float getDamping() const;
+
+		void setMass(const float mass);
+		float getMass() const;
+		void setInverseMass(const float inverseMass);
+		float getInverseMass() const;
+		bool hasFiniteMass() const;
+
+		/**
+		* @brief Returns the gravitational force acting on a particle, considering the mass of the object.
+		*/
+		Vector2 getGravityForce() const;
 
 		/**
 		* @brief Set the particles color
@@ -67,11 +114,23 @@ class Particle
 		void setRandomPosition(float radius, int boundW, int boundH);
 
 		/**
-		* @breif Assign a random velocity to the particle
+		* @brief Assign a random velocity to the particle
 		* 
-		* @parma maxVelocity Represents the absolute maximum and minimum velocity of the particle
+		* @param maxVelocity Represents the absolute maximum and minimum velocity of the particle
 		*/
 		void setRandomVelocity(float maxVelocity);
+
+		/**
+		* Due to potential physical inconsistencies in the mass and radius of a particle, we can calculate the mass from a given radius and reference sphere.
+		*
+		* Example: If you give a big sphere a large radius but only slightly increase its mass,
+		* it will experience too much drag for its weight, and fall slower than expected.
+		* 
+		* @param radius the particle radius
+		* @param refRadius optional - reference particles radius
+		* @param refMass optional - reference particles mass
+		*/
+		float computeMassFromRadius(float radius, float refRadius = 5, float refMass = 1);
        };
 
 	#endif 

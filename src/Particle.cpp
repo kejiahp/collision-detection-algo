@@ -1,7 +1,8 @@
-#include "particle.h"
 #include <math.h>
+#include <assert.h>
+
+#include "particle.h"
 #include "utils.hpp"
-#include <iostream>
 
 float Particle::getRadius() const
 {
@@ -9,7 +10,47 @@ float Particle::getRadius() const
 }
 
 void Particle::integrate(float duration) {
-    position += velocity * duration;
+    assert(duration > 0.0);
+    if (inverseMass <= 0.0f) return;
+
+    // work out the acceleration from the force
+    Vector2 resultingAcc = acceleration;
+    resultingAcc.addScaledVector(forceAccum, inverseMass);
+
+    // update linear velocity from the acceleration
+    velocity.addScaledVector(resultingAcc, duration);
+
+    // impose drag
+    //velocity *= pow(damping, duration);
+    
+    // update linear position
+    position.addScaledVector(velocity, duration);
+
+    // clear the forces
+    clearAccumulator();
+}
+
+Vector2 Particle::getDragForce() {
+    float speed = velocity.magnitude();
+    if (speed <= 0.0f) return Vector2{0, 0}; // no drag needed
+    float k1 = 0.0;
+    float k2 = 0.01 * radius * radius;
+    float dragMag = k1 * speed + k2 * speed * speed;
+    Vector2 dragForce;
+    // direction of drag = opposite of velocity direction
+    dragForce.x = velocity.x * -(dragMag / speed);
+    dragForce.y = velocity.y * -(dragMag / speed); 
+    return dragForce;
+}
+
+
+float Particle::computeMassFromRadius(float radius, float refRadius, float refMass) {
+    float scale = radius / refRadius;
+    return refMass * scale * scale * scale;
+}
+
+Vector2 Particle::getGravityForce() const {
+    return Vector2(0, -10 * getMass());
 }
 
 void Particle::setRadius(const float r)
@@ -38,6 +79,61 @@ void Particle::setVelocity(const float x, const float y)
 Vector2 Particle::getVelocity() const
 {
     return velocity;
+}
+
+void Particle::setAcceleration(const Vector2& newAcceleration) {
+    acceleration = newAcceleration;
+}
+
+void Particle::setAcceleration(const float x, const float y) {
+    acceleration.x = x;
+    acceleration.y = y;
+}
+
+Vector2 Particle::getAcceleration() const {
+    return acceleration;
+}
+
+void Particle::setDamping(const float damping) {
+    this->damping = damping;
+}
+
+float Particle::getDamping() const {
+    return damping;
+}
+
+void Particle::setMass(const float mass) {
+    assert(mass != 0);
+    inverseMass = 1.0 / mass;
+}
+
+float Particle::getMass() const {
+    if (inverseMass == 0) {
+        return DBL_MAX;
+    }
+    else {
+        return 1.0 / inverseMass;
+    }
+}
+
+void Particle::setInverseMass(const float inverseMass) {
+    this->inverseMass = inverseMass;
+}
+
+float Particle::getInverseMass() const {
+    return inverseMass;
+}
+
+bool Particle::hasFiniteMass() const {
+    return inverseMass >= 0.0f;
+}
+
+void Particle::clearAccumulator() {
+    forceAccum.clear();
+}
+
+void Particle::addForce(const Vector2& force) {
+    forceAccum += force;
 }
 
 void Particle::setColor(const customcolor::Color &newColor) {
