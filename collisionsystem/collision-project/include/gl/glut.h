@@ -7,7 +7,7 @@
    provided without guarantee or warrantee expressed or  implied. This
    program is -not- in the public domain. */
 
-#if defined(WIN32)
+#if defined(_WIN32)
 #include <windows.h>
 #pragma warning (disable:4244)        /* disable bogus conversion warnings */
 #endif

@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     {
     glutInit(&argc, argv);
     app = getApplication();
-	float  timeinterval = 5;
+	float  timeinterval = 10;
 	app->setTimeinterval(timeinterval);
 	createWindow("Sphere");
 	glutReshapeFunc(resize);
