@@ -70,6 +70,10 @@ Vector2 Particle::getPosition() const
     return position;
 }
 
+void Particle::setVelocity(const Vector2& velocity) {
+    this->velocity = velocity;
+}
+
 void Particle::setVelocity(const float x, const float y)
 {
     velocity.x = x;

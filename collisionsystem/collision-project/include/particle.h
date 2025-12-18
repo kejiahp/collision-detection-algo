@@ -29,6 +29,7 @@ class Particle
 		float getRadius() const;
 		void integrate(float duration);
 
+		void setVelocity(const Vector2& velocity);
 		void setVelocity(const float x, const float y);
 		Vector2 getVelocity() const;
 
