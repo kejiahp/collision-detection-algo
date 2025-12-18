@@ -27,8 +27,10 @@ bld/
 
 # Generated files
 *.exe
-*.dll
-*.lib
+Debug/*.dll
+Release/*.lib
+Debug/*.lib
+Release/*.dll
 *.app
 *.pdb
 *.idb
