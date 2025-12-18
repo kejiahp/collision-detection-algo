@@ -18,10 +18,10 @@ void TimerFunc(int value)
 	glutTimerFunc(timeinterval, TimerFunc, 1);
 }
 
-void createWindow(const char* title)
+void createWindow(const char* title, int h, int w)
 {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(600, 600);
+    glutInitWindowSize(h, w);
     glutCreateWindow(title);
 }
 
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     app = getApplication();
 	float  timeinterval = 10;
 	app->setTimeinterval(timeinterval);
-	createWindow("Sphere");
+	createWindow("BLOB DEMO", app->getheight(), app->getwidth());
 	glutReshapeFunc(resize);
 	glutDisplayFunc(display); 
 	glutTimerFunc(timeinterval, TimerFunc, 1);

@@ -144,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
+    <ClCompile Include="src\blob_demo.cpp" />
     <ClCompile Include="src\custom_color.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\particle.cpp" />

@@ -5,6 +5,7 @@ protected:
     int height;
     int width;
     float timeinterval;
+    float nRange;
 public:
     virtual void initGraphics();
     virtual void display();
@@ -12,6 +13,8 @@ public:
     virtual void update();
     float getTimeinterval();
     void setTimeinterval(float timeint);
+    int getheight();
+    int getwidth();
 };
 
 

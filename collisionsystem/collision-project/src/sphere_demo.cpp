@@ -181,13 +181,7 @@ void SphereDemo::display(void)
 	glutSwapBuffers();
 }
 
-Application* getApplication()
-{
-    return new SphereDemo();
-}
-
-
-
-
-
-
+//Application* getApplication()
+//{
+//    return new SphereDemo();
+//}

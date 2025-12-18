@@ -24,6 +24,9 @@ class Vector2
         /** The default constructor creates a zero vector. */
         Vector2() : x(0), y(0) {}
 
+        const static Vector2 GRAVITY;
+        const static Vector2 UP;
+
         /**
          * The explicit constructor creates a vector with the given
          * components.

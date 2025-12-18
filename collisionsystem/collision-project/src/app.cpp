@@ -4,6 +4,16 @@
 #include <iostream>
 
 
+int Application::getwidth()
+{
+	return width;
+}
+
+int Application::getheight()
+{
+	return height;
+}
+
 void Application::initGraphics()
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f );	
