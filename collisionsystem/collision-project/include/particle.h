@@ -112,7 +112,7 @@ class Particle
 		*
 		* @param boundH Represents the viewport height
 		*/
-		void setRandomPosition(float radius, int boundW, int boundH);
+		void setRandomPosition(float radius, float boundW, float boundH);
 
 		/**
 		* @brief Assign a random velocity to the particle

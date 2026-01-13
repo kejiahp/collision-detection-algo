@@ -253,6 +253,10 @@ class Vector2
             y = -y;
         }
 
+        /** Checks if the speed of particle is close enough to zero*/
+        bool isNearZero(float eps = 1e-4f) const { return squareMagnitude() < eps * eps; }
+
+
     };
 
     

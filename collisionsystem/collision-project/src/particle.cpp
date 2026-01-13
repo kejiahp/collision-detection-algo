@@ -13,6 +13,10 @@ void Particle::integrate(float duration) {
     assert(duration > 0.0);
     if (inverseMass <= 0.0f) return;
 
+    if (velocity.isNearZero()) {
+        velocity.clear(); // sets x = y = 0
+    }
+
     // work out the acceleration from the force
     Vector2 resultingAcc = acceleration;
     resultingAcc.addScaledVector(forceAccum, inverseMass);
@@ -157,11 +161,11 @@ void Particle::setRandomRadius(int boundW, int boundH) {
     int smallestBoundary = boundW > boundH ? boundH : boundW;
     // check if 1/4 the smallest boundary is gte to 10
     int rangeMin = smallestBoundary / 4 >= 10 ? 10 : 1;
-    setRadius(static_cast<float>(utils::random_in_range(rangeMin, smallestBoundary / 2)));
+    setRadius(static_cast<float>(utils::random_in_range(rangeMin, smallestBoundary / 8)));
 };
 
 
-void Particle::setRandomPosition(float radius, int boundW, int boundH) {
+void Particle::setRandomPosition(float radius, float boundW, float boundH) {
     boundW = boundW - radius;
     boundH = boundH - radius;
     float x = static_cast<float>(utils::random_in_range(-boundW, boundW));

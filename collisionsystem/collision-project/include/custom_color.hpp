@@ -2,6 +2,7 @@
 #define CUSTOM_COLOR_H
 
 #include <cstdint>
+#include <sstream>
 
 /**
 * @namespace customcolor
@@ -16,7 +17,14 @@ namespace customcolor {
     *
     * struct of unsigned int (0 - 255) that are exactly 8 bits wide
     */
-    struct Color { uint8_t r, g, b; };
+    struct Color { 
+        uint8_t r, g, b;
+    
+        /**
+        * Returns the string representation of Color
+        */
+        std::string toString() const;
+    };
 
     /*Generates a random color
     *

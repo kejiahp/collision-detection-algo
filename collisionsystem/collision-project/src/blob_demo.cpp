@@ -8,10 +8,14 @@
 #include "pcontacts.h"
 #include "pworld.h"
 #include <stdio.h>
+#include <utility>
+#include <iostream>
 #include <cassert>
 
 
 const Vector2 Vector2::GRAVITY = Vector2(0, -9.81);
+constexpr int PARTICLE_COUNT = 2;
+constexpr int PLATFORM_COUNT = 7;
 
 /**
  * Platforms are two dimensional: lines on which the
@@ -26,7 +30,7 @@ public:
     /**
      * Holds a pointer to the particles we're checking for collisions with.
      */
-    Particle* particles[2];
+    Particle* particles[PARTICLE_COUNT];
 
     virtual unsigned addContact(
         ParticleContact* contact,
@@ -37,12 +41,14 @@ public:
 unsigned Platform::addContact(ParticleContact* contact,
     unsigned limit) const
 {
-    const static float restitution = 0.5f;
-    //const static float restitution = 1.0f;
-    unsigned used;
+    // restitution controls how bouncy an object feels
+    const static float restitution = 0.5f; // 1.0f
 
-    for (Particle *particle : particles) {
-        used = 0;
+    // this helps travers the contact resolver array
+    unsigned int used = 0;
+
+    for (int i = 0; i < PARTICLE_COUNT; ++i) {
+        Particle* particle = particles[i];
 
         // Check for penetration
         Vector2 toParticle = particle->getPosition() - start;
@@ -111,12 +117,9 @@ unsigned Platform::addContact(ParticleContact* contact,
 
 class BlobDemo : public Application
 {
-    Particle* blob;
-    Particle* blob2;
+    Particle* blobs;
 
-    Platform* platform;
-    Platform* platform2;
-    Platform* platform3;
+    Platform* platforms;
 
     ParticleWorld world;
 
@@ -142,111 +145,104 @@ BlobDemo::BlobDemo() :world(2, 1)
     width = 400; height = 400;
     nRange = 100.0;
 
-    // Create the blob storage
-    blob = new Particle;
-    blob2 = new Particle;
+    // Create the blob storage array
+    blobs = new Particle[PARTICLE_COUNT];
 
-    // Create the platform
-    platform = new Platform;
-    platform2 = new Platform;
-    platform3 = new Platform;
+    // Create the platforms array
+    platforms = new Platform[PLATFORM_COUNT];
 
-    platform->start = Vector2(-50.0, 10.0);
-    platform->end = Vector2(50.0, 0.0);
+    // define each platform items start and end positions
+    std::pair<Vector2, Vector2> platformPositions[PLATFORM_COUNT] = { 
+        {Vector2(-50.0f, 10.0f), Vector2(50.0f, 0.0f)},
+        {Vector2(0.0f, -70.0f), Vector2(100.0f, -55.0f)},
+        {Vector2(-20.0f, -70.0f), Vector2(-70.0f, -55.0f)},
+        {Vector2(-90.0f, 90.0f), Vector2(90.0f, 90.0f)},
+        {Vector2(-90.0f, 90.0f), Vector2(-90.0f, -90.0f)},
+        {Vector2(-90.0f, -90.0f), Vector2(90.0f, -90.00f)},
+        {Vector2(90.0f, -90.f), Vector2(90.0f, 90.0f)},
+        };
 
-    platform2->start = Vector2(0.0, -70.0);
-    platform2->end = Vector2(80.0, -55.0);
+    for (int i = 0; i < PLATFORM_COUNT; ++i) {
+        platforms[i].start = platformPositions[i].first;
+        platforms[i].end = platformPositions[i].second;
+    };
 
-    platform3->start = Vector2(-20.0, -70.0);
-    platform3->end = Vector2(-70.0,-55.0);
+    for (int i = 0; i < PARTICLE_COUNT; ++i) {
+        //if (i == 0) blobs[i].setPosition(0.0, 90.0);
+        //else blobs[i].setPosition(30.0, 90.0);
+
+        // Create the blob
+        blobs[i].setRadius(5);
+        blobs[i].setRandomPosition(blobs[i].getRadius(), 80.0f, 80.0f);
+        blobs[i].setRandomColor();
+        blobs[i].setRandomVelocity(50.0f);
+        //blobs[i].setVelocity(0, 0);
+        blobs[i].setDamping(1.0);
+        blobs[i].setAcceleration(Vector2::GRAVITY * 20.0f);
+        blobs[i].setMass(30.0f);
+        blobs[i].clearAccumulator();
+
+        // Add blob to the world particles
+        world.getParticles().push_back(&blobs[i]);
+    }
 
     // Make sure the platform knows which particle it should collide with.
-    platform->particles[0] = blob;
-    platform2->particles[0] = blob;
-    platform3->particles[0] = blob;
+    for (int i = 0; i < PLATFORM_COUNT; ++i) {
+        for (int j = 0; j < PARTICLE_COUNT; ++j) {
+            platforms[i].particles[j] = &blobs[j];
+        }
+        world.getContactGenerators().push_back(&platforms[i]);
+    }
 
-    platform->particles[1] = blob2;
-    platform2->particles[1] = blob2;
-    platform3->particles[1] = blob2;
+    // check for particle to platform mapping
+    //for (int i = 0; i < PLATFORM_COUNT; ++i) {
+    //    for(Particle * p : platforms[i].particles) {
+    //        std::cout << "Platform - X: " << platforms[i].start.x << " Particle Position - X: " << p->getPosition().x << std::endl;
+    //    }
+    //}
 
-    world.getContactGenerators().push_back(platform);
-    world.getContactGenerators().push_back(platform2);
-    world.getContactGenerators().push_back(platform3);
+    //// check for world particles
+    //for (auto wp : world.getParticles()) {
+    //    std::cout << "World Particle - X: " << wp->getPosition().x << std::endl;
+    //}
 
-    // Create the blob
-    blob->setPosition(0.0, 90.0);
-    blob->setRadius(5);
-    blob->setVelocity(0, 0);
-    //blob->setDamping(0.9);
-    blob->setDamping(1.0);
-    blob->setAcceleration(Vector2::GRAVITY * 20.0f);
-
-    blob->setMass(30.0f);
-    blob->clearAccumulator();
-    world.getParticles().push_back(blob);
-
-    // Create the blob
-    blob2->setPosition(30.0, 90.0);
-    blob2->setRadius(5);
-    blob2->setVelocity(0, 0);
-    //blob->setDamping(0.9);
-    blob2->setDamping(1.0);
-    blob2->setAcceleration(Vector2::GRAVITY * 20.0f);
-
-    blob2->setMass(30.0f);
-    blob2->clearAccumulator();
-    world.getParticles().push_back(blob2);
+    //// check for world contact generators/platforms
+    //for(auto cg: world.getContactGenerators()) {
+    //    std::cout << "Contact Generator Platform - X " << dynamic_cast<Platform*>(cg)->start.x << std::endl;
+    //}
 }
 
 
 BlobDemo::~BlobDemo()
 {
-    delete blob;
-    delete blob2;
+    delete[] blobs;
+    delete[] platforms;
 }
 
 void BlobDemo::display()
 {
     Application::display();
 
-    const Vector2& p0 = platform->start;
-    const Vector2& p1 = platform->end;
+    // Draw Particles
+    for (int i = 0; i < PLATFORM_COUNT; ++i) {
+        glBegin(GL_LINES);
+        glColor3f(0, 1, 1);
+        glVertex2f(platforms[i].start.x, platforms[i].start.y);
+        glVertex2f(platforms[i].end.x, platforms[i].end.y);
+        glEnd();
+    }
 
-    glBegin(GL_LINES);
-    glColor3f(0, 1, 1);
-    glVertex2f(p0.x, p0.y);
-    glVertex2f(p1.x, p1.y);
-    glEnd();
-
-    // Particle 2
-    glBegin(GL_LINES);
-    glColor3f(0, 1, 1);
-    glVertex2f(platform2->start.x, platform2->start.y);
-    glVertex2f(platform2->end.x, platform2->end.y);
-    glEnd();
-
-    // Particle 3
-    glBegin(GL_LINES);
-    glColor3f(0, 1, 1);
-    glVertex2f(platform3->start.x, platform3->start.y);
-    glVertex2f(platform3->end.x, platform3->end.y);
-    glEnd();
-
-    const Vector2& p = blob->getPosition();
-    glPushMatrix();
-    glColor3f(0, 255, 0);
-    glTranslatef(p.x, p.y, 0);
-    glutSolidSphere(blob->getRadius(), 12, 12);
-    glPopMatrix();
-
-    glPushMatrix();
-    glColor3f(255, 0, 0);
-    glTranslatef(blob2->getPosition().x, blob2->getPosition().y, 0);
-    glutSolidSphere(blob2->getRadius(), 12, 12);
-    glPopMatrix();
+    // Draw Particles/Blobs
+    for (int i = 0; i < PARTICLE_COUNT; ++i) {
+        glPushMatrix();
+        customcolor::Color pcolor = blobs[i].getColor();
+        glColor3ub(pcolor.r, pcolor.g, pcolor.b);
+        glTranslatef(blobs[i].getPosition().x, blobs[i].getPosition().y, 0.0f);
+        glutSolidSphere(blobs[i].getRadius(), 12, 12);
+        glPopMatrix();
+    }
 
     glutSwapBuffers();
-
 }
 
 void BlobDemo::update()
