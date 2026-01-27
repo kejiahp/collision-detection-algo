@@ -17,9 +17,9 @@ class Particle
 	 Vector2 velocity;
 	 Vector2 acceleration;
 	 Vector2 forceAccum;  // Represents the accumulation of the various forces acting on the particle e.g. gravity
-     float damping; // Don't use this, use the `getDragForce` method, add the returned force to the accumulator on each render
-	 float radius;
-	 float inverseMass;
+     float damping = 0.0f; // Don't use this, use the `getDragForce` method, add the returned force to the accumulator on each render
+	 float radius = 0.0f;
+	 float inverseMass = 0.0f;
 	 customcolor::Color color;
 	 
       public:
@@ -132,6 +132,15 @@ class Particle
 		* @param refMass optional - reference particles mass
 		*/
 		float computeMassFromRadius(float radius, float refRadius = 5, float refMass = 1);
+
+
+
+		/**
+		* @brief Returns a string representation of the particle.
+		*
+		* Created specifically for debugging.
+		*/
+		std::string toString() const;
        };
 
 	#endif 

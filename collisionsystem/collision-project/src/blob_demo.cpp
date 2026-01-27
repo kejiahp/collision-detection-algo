@@ -15,7 +15,7 @@
 
 const Vector2 Vector2::GRAVITY = Vector2(0, -9.81);
 constexpr int PARTICLE_COUNT = 2;
-constexpr int PLATFORM_COUNT = 7;
+constexpr int PLATFORM_COUNT = 5;
 
 /**
  * Platforms are two dimensional: lines on which the
@@ -41,8 +41,8 @@ public:
 unsigned Platform::addContact(ParticleContact* contact,
     unsigned limit) const
 {
-    // restitution controls how bouncy an object feels
-    const static float restitution = 0.5f; // 1.0f
+    // restitution controls how bouncy an object feels, restitution of 1 (perfectly bouncy).
+    const static float restitution = 1.0f; // 0.5f
 
     // this helps travers the contact resolver array
     unsigned int used = 0;
@@ -154,8 +154,8 @@ BlobDemo::BlobDemo() :world(2, 1)
     // define each platform items start and end positions
     std::pair<Vector2, Vector2> platformPositions[PLATFORM_COUNT] = { 
         {Vector2(-50.0f, 10.0f), Vector2(50.0f, 0.0f)},
-        {Vector2(0.0f, -70.0f), Vector2(100.0f, -55.0f)},
-        {Vector2(-20.0f, -70.0f), Vector2(-70.0f, -55.0f)},
+        /*{Vector2(0.0f, -70.0f), Vector2(100.0f, -55.0f)},
+        {Vector2(-20.0f, -70.0f), Vector2(-70.0f, -55.0f)},*/
         {Vector2(-90.0f, 90.0f), Vector2(90.0f, 90.0f)},
         {Vector2(-90.0f, 90.0f), Vector2(-90.0f, -90.0f)},
         {Vector2(-90.0f, -90.0f), Vector2(90.0f, -90.00f)},
@@ -175,11 +175,11 @@ BlobDemo::BlobDemo() :world(2, 1)
         blobs[i].setRadius(5);
         blobs[i].setRandomPosition(blobs[i].getRadius(), 80.0f, 80.0f);
         blobs[i].setRandomColor();
-        blobs[i].setRandomVelocity(50.0f);
-        //blobs[i].setVelocity(0, 0);
-        blobs[i].setDamping(1.0);
-        blobs[i].setAcceleration(Vector2::GRAVITY * 20.0f);
-        blobs[i].setMass(30.0f);
+        blobs[i].setRandomVelocity(100.0f);
+        //blobs[i].setVelocity(0, 0.0f);
+        //blobs[i].setDamping(1.0);
+        //blobs[i].setAcceleration(Vector2::GRAVITY);
+        blobs[i].setMass(100.0f);
         blobs[i].clearAccumulator();
 
         // Add blob to the world particles
@@ -249,6 +249,14 @@ void BlobDemo::update()
 {
     // Recenter the axes
     float duration = timeinterval / 1000;
+
+    //for (int i = 0; i < PLATFORM_COUNT; ++i) {
+    //    for (int j = 0; j < PARTICLE_COUNT; ++j) {
+    //        Particle* particle = platforms[i].particles[j];
+    //        std::cout << "ID: " << j << particle->toString() << std::endl;
+    //    }
+    //}
+
     // Run the simulation
     world.runPhysics(duration);
 

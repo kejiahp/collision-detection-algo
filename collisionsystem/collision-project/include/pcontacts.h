@@ -62,6 +62,10 @@
          * Handles the impulse calculations for this collision.
          */
         void resolveVelocity(float duration);
+        /**
+        * Handles 
+        */
+        void resolveInterpenetration(float duration);
 
     };
 

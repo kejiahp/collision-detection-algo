@@ -2,6 +2,7 @@
 // draw a single sphere in the middle of the screen
 // OO basic
 
+/*
 #include <gl/glut.h>// OpenGL toolkit
 #include <app.h>// OpenGL toolkit
 #include "particle.h"
@@ -10,6 +11,7 @@
 
 static constexpr int NO_OF_PARTICLES = 3;
 
+
 class SphereDemo : public Application
 {
 	Particle particles[NO_OF_PARTICLES];
@@ -17,7 +19,7 @@ public:
 	SphereDemo();
 	virtual void display();
 	virtual void update();
-	/*
+	
 	* Method to deflect the particle off the box boundary on collision
 	*
 	* @param p Represents the particle
@@ -25,9 +27,9 @@ public:
 	* @param boundaryWidth Represents the viewport width
 	*
 	* @param boundaryHeight Represents the viewport height
-	*/
+	
 	void box_boundary_collision_resolve(Particle& p, int boundaryWidth, int boundaryHeight);
-	/*
+	
 	* Detect particle viewport collision
 	*
 	Apparently in graphics libraries the top-left is the (x=0,y=0) coordinate, not the center of the viewport.
@@ -39,9 +41,9 @@ public:
 	* @param boundaryHeight Represents the viewport height
 	*
 	* @return `bool` hit
-	*/
+	
 	bool out_of_box_test(Particle p, int boundaryWidth, int boundaryHeight);
-	/*
+	
 	* Method to draw out of bound particles within boundaries
 	*
 	* @param p Represents the particle
@@ -49,7 +51,7 @@ public:
 	* @param boundaryWidth Represents the viewport width
 	*
 	* @param boundaryHeight Represents the viewport height
-	*/
+	
 	void out_of_box_resolve(Particle& p, int boundaryWidth, int boundaryHeight);
 };
 
@@ -63,9 +65,9 @@ SphereDemo::SphereDemo()
 	for (int i = 0; i < sizeof(particles) / sizeof(Particle); ++i) {
 		Particle& p = particles[i];
 
-	/*	p.setRandomColor();
-		p.setVelocity(0, 0);
-		p.setAcceleration(0, 0);*/
+		// p.setRandomColor();
+		// p.setVelocity(0, 0);
+		// p.setAcceleration(0, 0);
 
 		//if ((i + 1) == 3) {
 		//	p.setRadius(15);
@@ -186,3 +188,5 @@ void SphereDemo::display(void)
 //{
 //    return new SphereDemo();
 //}
+
+*/

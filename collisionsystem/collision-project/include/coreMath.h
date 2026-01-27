@@ -1,5 +1,3 @@
-#include <math.h>
-
 /**
  * @file
  *
@@ -9,6 +7,8 @@
 #ifndef CORE_MATH
 #define CORE_MATH
 
+#include <math.h>
+#include <string>
 
 class Vector2
     {
@@ -256,7 +256,15 @@ class Vector2
         /** Checks if the speed of particle is close enough to zero*/
         bool isNearZero(float eps = 1e-4f) const { return squareMagnitude() < eps * eps; }
 
-
+        /**
+        * @brief Returns a string representation of the Vector, display its x and y values.
+        * 
+        * Created specifically for debugging.
+        */
+        std::string toString() const { 
+            std::string vecStr = "{X: " + std::to_string(x) + ",Y: " + std::to_string(y) + "}";
+            return vecStr;
+        }
     };
 
     

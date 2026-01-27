@@ -13,9 +13,9 @@ void Particle::integrate(float duration) {
     assert(duration > 0.0);
     if (inverseMass <= 0.0f) return;
 
-    if (velocity.isNearZero()) {
-        velocity.clear(); // sets x = y = 0
-    }
+    //if (velocity.isNearZero()) {
+    //    velocity.clear(); // sets x = y = 0
+    //}
 
     // work out the acceleration from the force
     Vector2 resultingAcc = acceleration;
@@ -178,3 +178,10 @@ void Particle::setRandomVelocity(float maxVelocity) {
     float y = static_cast<float>(utils::random_in_range(-maxVelocity, maxVelocity));
     setVelocity(x, y);
 };
+
+std::string Particle::toString() const {
+    return "{Acceleration: " + acceleration.toString() + ",Velocity: " + velocity.toString()  
+        + ",Position: " + position.toString()  + ",Radius: " + std::to_string(radius) 
+        + ",Damping: " + std::to_string(damping) 
+        + ",Mass: " + std::to_string(getMass()) + ",InverseMass: " + std::to_string(inverseMass) + '}';
+}
