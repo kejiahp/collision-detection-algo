@@ -24,6 +24,7 @@ class Particle
 	 
       public:
         void setPosition(const float x, const float y);
+		void setPosition(const Vector2& position);
 		void setRadius(const float r);
 		Vector2 getPosition() const;
 		float getRadius() const;

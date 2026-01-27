@@ -45,6 +45,9 @@
          */
         float penetration;
 
+        /***/
+        Vector2 particleMovement[2];
+
 
     protected:
         /**
@@ -106,6 +109,9 @@
         void resolveContacts(ParticleContact *contactArray,
             unsigned numContacts,
             float duration);
+
+        void updateInterpenetrations(ParticleContact* contactArray,
+            unsigned numContacts, unsigned maxIndex);
     };
 
     /**

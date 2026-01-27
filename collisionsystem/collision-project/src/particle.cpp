@@ -68,6 +68,10 @@ void Particle::setPosition(const float x, const float y)
     position.y = y;
 }
 
+void Particle::setPosition(const Vector2& position) {
+    this->position = position;
+}
+
 
 Vector2 Particle::getPosition() const
 {

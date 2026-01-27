@@ -59,31 +59,31 @@ void ParticleContact::resolveVelocity(float duration)
     }
 }
 
-//void ParticleContact::resolveInterpenetration(float duration) {
-//    // If we don't have any penetration, skip this step.
-//    if (penetration <= 0) return;
-//    // The movement of each object is based on their inverse mass, so
-//    // total that.
-//    float totalInverseMass = particle[0]->getInverseMass();
-//    if (particle[1]) totalInverseMass += particle[1]->getInverseMass();
-//    // If all particles have infinite mass, then we do nothing
-//    if (totalInverseMass <= 0) return;
-//    // Find the amount of penetration resolution per unit of inverse mass
-//    Vector2 movePerIMass = contactNormal * (penetration / totalInverseMass);
-//    // Calculate the the movement amounts
-//    particleMovement[0] = movePerIMass * particle[0]->getInverseMass();
-//    if (particle[1]) {
-//        particleMovement[1] = movePerIMass * -particle[1]->getInverseMass();
-//    }
-//    else {
-//        particleMovement[1].clear();
-//    }
-//    // Apply the penetration resolution
-//    particle[0]->setPosition(particle[0]->getPosition() + particleMovement[0]);
-//    if (particle[1]) {
-//        particle[1]->setPosition(particle[1]->getPosition() + particleMovement[1]);
-//    }
-//}
+void ParticleContact::resolveInterpenetration(float duration) {
+    // If we don't have any penetration, skip this step.
+    if (penetration <= 0) return;
+    // The movement of each object is based on their inverse mass, so
+    // total that.
+    float totalInverseMass = particle[0]->getInverseMass();
+    if (particle[1]) totalInverseMass += particle[1]->getInverseMass();
+    // If all particles have infinite mass, then we do nothing
+    if (totalInverseMass <= 0) return;
+    // Find the amount of penetration resolution per unit of inverse mass
+    Vector2 movePerIMass = contactNormal * (penetration / totalInverseMass);
+    // Calculate the the movement amounts
+    particleMovement[0] = movePerIMass * particle[0]->getInverseMass();
+    if (particle[1]) {
+        particleMovement[1] = movePerIMass * -particle[1]->getInverseMass();
+    }
+    else {
+        particleMovement[1].clear();
+    }
+    // Apply the penetration resolution
+    particle[0]->setPosition(particle[0]->getPosition() + particleMovement[0]);
+    if (particle[1]) {
+        particle[1]->setPosition(particle[1]->getPosition() + particleMovement[1]);
+    }
+}
 
 ParticleContactResolver::ParticleContactResolver(unsigned iterations)
 :
@@ -123,8 +123,38 @@ void ParticleContactResolver::resolveContacts(ParticleContact *contactArray,
 
         // Resolve this contact
         contactArray[maxIndex].resolve(duration);
+        
+        //if (updatePenetration) updateInterpenetrations(contactArray, numContacts, maxIndex); // Might Delete Later
 
         iterationsUsed++;
     }
 
+}
+
+
+void ParticleContactResolver::updateInterpenetrations(ParticleContact* contactArray,
+    unsigned numContacts, unsigned maxIndex) {
+    Vector2* move = contactArray[maxIndex].particleMovement;
+    for (int i = 0; i < numContacts; i++)
+    {
+        if (contactArray[i].particle[0] == contactArray[maxIndex].particle[0])
+        {
+            contactArray[i].penetration -= move[0] * contactArray[i].contactNormal;
+        }
+        else if (contactArray[i].particle[0] == contactArray[maxIndex].particle[1])
+        {
+            contactArray[i].penetration -= move[1] * contactArray[i].contactNormal;
+        }
+        if (contactArray[i].particle[1])
+        {
+            if (contactArray[i].particle[1] == contactArray[maxIndex].particle[0])
+            {
+                contactArray[i].penetration += move[0] * contactArray[i].contactNormal;
+            }
+            else if (contactArray[i].particle[1] == contactArray[maxIndex].particle[1])
+            {
+                contactArray[i].penetration += move[1] * contactArray[i].contactNormal;
+            }
+        }
+    }//for
 }

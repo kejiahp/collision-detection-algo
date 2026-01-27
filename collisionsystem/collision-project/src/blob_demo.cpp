@@ -14,8 +14,59 @@
 
 
 const Vector2 Vector2::GRAVITY = Vector2(0, -9.81);
-constexpr int PARTICLE_COUNT = 2;
+constexpr int PARTICLE_COUNT = 10;
 constexpr int PLATFORM_COUNT = 5;
+
+
+class ParticleCollision : public ParticleContactGenerator {
+public:
+    Particle* particles[PARTICLE_COUNT];
+
+    virtual unsigned addContact(
+        ParticleContact* contact,
+        unsigned limit
+    ) const;
+};
+
+
+unsigned ParticleCollision::addContact(
+    ParticleContact* contact,
+    unsigned limit
+) const
+{
+    unsigned used = 0;
+    const static float restitution = 1.0f; // 0.5f
+
+    for (int i = 0; i < PARTICLE_COUNT; ++i) {
+        for (int j = i + 1; j < PARTICLE_COUNT; ++j) {
+
+            if (used >= limit) return used;
+
+            Particle* A = particles[i];
+            Particle* B = particles[j];
+
+            Vector2 delta = A->getPosition() - B->getPosition();
+            float distance = delta.magnitude();
+
+            float totalRadius = A->getRadius() + B->getRadius();
+         
+
+            if (distance <= totalRadius) {
+                contact->contactNormal = delta.unit();
+                contact->restitution = restitution;
+                contact->particle[0] = A;
+                contact->particle[1] = B;
+                contact->penetration = totalRadius - distance;
+
+                used++;
+                contact++;
+            }
+        }
+    }
+
+    return used;
+}
+
 
 /**
  * Platforms are two dimensional: lines on which the
@@ -121,6 +172,8 @@ class BlobDemo : public Application
 
     Platform* platforms;
 
+    ParticleCollision* particleCollision;
+
     ParticleWorld world;
 
 public:
@@ -150,6 +203,11 @@ BlobDemo::BlobDemo() :world(2, 1)
 
     // Create the platforms array
     platforms = new Platform[PLATFORM_COUNT];
+
+    // Create particle-particle collision generator
+    particleCollision = new ParticleCollision();
+
+
 
     // define each platform items start and end positions
     std::pair<Vector2, Vector2> platformPositions[PLATFORM_COUNT] = { 
@@ -186,6 +244,12 @@ BlobDemo::BlobDemo() :world(2, 1)
         world.getParticles().push_back(&blobs[i]);
     }
 
+    // Give it access to all blobs
+    for (int i = 0; i < PARTICLE_COUNT; ++i) {
+        particleCollision->particles[i] = &blobs[i];
+    }
+
+
     // Make sure the platform knows which particle it should collide with.
     for (int i = 0; i < PLATFORM_COUNT; ++i) {
         for (int j = 0; j < PARTICLE_COUNT; ++j) {
@@ -193,6 +257,9 @@ BlobDemo::BlobDemo() :world(2, 1)
         }
         world.getContactGenerators().push_back(&platforms[i]);
     }
+
+    // Register with the world
+    world.getContactGenerators().push_back(particleCollision);
 
     // check for particle to platform mapping
     //for (int i = 0; i < PLATFORM_COUNT; ++i) {
