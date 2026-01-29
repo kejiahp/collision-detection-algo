@@ -11,31 +11,187 @@
 #include <utility>
 #include <iostream>
 #include <cassert>
+#include <quadtree.h>
+#include <algorithm>
+
+
+
+//bool checkCollision(Particle*  A, Particle* B, ParticleContact* contact) {
+//    float restitution = 1.0f;
+//
+//    Vector2 delta = A->getPosition() - B->getPosition();
+//    float distance = delta.magnitude();
+//
+//    float totalRadius = A->getRadius() + B->getRadius();
+//
+//
+//    if (distance > totalRadius) return false;
+//
+//    contact->contactNormal = delta.unit();
+//    contact->restitution = restitution;
+//    contact->particle[0] = A;
+//    contact->particle[1] = B;
+//    contact->penetration = totalRadius - distance;
+//    return true;
+//}
+
+//unsigned ParticleCollision::addContact(ParticleContact* contact, unsigned limit, float width, float height) const
+//{
+//    unsigned used = 0;
+//
+//    // 1. Build quadtree for this frame
+//    Quadtree tree(0, Rect{ -100, -100, 200, 200 }); // match your world bounds
+//
+//    //19900
+//
+//    for (int i = 0; i < PARTICLE_COUNT; ++i)
+//        tree.insert(particles[i]);
+//
+//    // 2. Query quadtree for each particle
+//    int quadCount = 0;
+//    int maxQuadCount = 0;
+//    for (int i = 0; i < PARTICLE_COUNT; ++i) {
+//        std::vector<Particle*> candidates;
+//        tree.retrieve(candidates, particles[i]);
+//
+//        for (Particle* other : candidates) {
+//            if (other == particles[i]) continue;
+//            if (used >= limit) return used;
+//
+//            // Your existing collision test
+//            if (checkCollision(particles[i], other, contact)) {
+//                used++;
+//                contact++;
+//            }
+//
+//            ++quadCount;
+//            maxQuadCount = (((maxQuadCount) > (quadCount)) ? (maxQuadCount) : (quadCount));
+//        }
+//
+//    }
+//
+//    std::cout << "maxQuadCount: " << maxQuadCount << std::endl;
+//    return used;
+//}
+
 
 
 const Vector2 Vector2::GRAVITY = Vector2(0, -9.81);
-constexpr int PARTICLE_COUNT = 10;
-constexpr int PLATFORM_COUNT = 5;
+constexpr int PARTICLE_COUNT = 200;
+constexpr int PLATFORM_COUNT = 7;
+constexpr int INIT_WIDTH = 400;
+constexpr int INIT_HEIGHT = 400;
 
 
 class ParticleCollision : public ParticleContactGenerator {
 public:
-    Particle* particles[PARTICLE_COUNT];
+    Particle* particles[PARTICLE_COUNT] = {};
 
     virtual unsigned addContact(
-        ParticleContact* contact,
-        unsigned limit
+        ParticleContact* contact, unsigned limit, float width, float height
     ) const;
 };
+
+//unsigned ParticleCollision::addContact(ParticleContact* contact, unsigned limit, float width, float height) const
+//{
+//
+//    if (limit == 0) return 0;
+//
+//    struct Interval {
+//        float minX;
+//        float maxX;
+//        Particle* p;
+//    };
+//
+//    int bruteCount = 0;
+//    int maxBruteCount = 0;
+//    float restitution = 1.0f;
+//
+//    std::vector<Interval> intervals;
+//    intervals.reserve(PARTICLE_COUNT);
+//
+//    // 1. Build intervals for each particle
+//    for (int i = 0; i < PARTICLE_COUNT; ++i) {
+//        Particle* p = particles[i];
+//        float r = p->getRadius();
+//        float x = p->getPosition().x;
+//
+//        intervals.push_back({ x - r, x + r, p });
+//    }
+//
+//    // 2. Sort by minX
+//    std::sort(intervals.begin(), intervals.end(),
+//        [](const Interval& a, const Interval& b) {
+//            return a.minX < b.minX;
+//        });
+//
+//    // 3. Sweep
+//    unsigned used = 0;
+//    std::vector<Interval*> active;
+//
+//    for (auto& current : intervals) {
+//
+//        // Remove intervals that no longer overlap on X
+//        active.erase(
+//            std::remove_if(active.begin(), active.end(),
+//                [&](Interval* other) {
+//                    return other->maxX < current.minX;
+//                }),
+//            active.end()
+//        );
+//
+//        // 4. Check current interval against all active intervals
+//        for (Interval* other : active) {
+//            if (used >= limit) return used;
+//
+//            Particle* A = current.p;
+//            Particle* B = other->p;
+//
+//            // Narrow-phase: circle-circle collision
+//
+//            Vector2 delta = A->getPosition() - B->getPosition();
+//            float distance = delta.magnitude();
+//
+//            float totalRadius = A->getRadius() + B->getRadius();
+//
+//
+//            if (distance <= totalRadius) {
+//                contact->contactNormal = delta.unit();
+//                contact->restitution = restitution;
+//                contact->particle[0] = A;
+//                contact->particle[1] = B;
+//                contact->penetration = totalRadius - distance;
+//
+//                ++bruteCount;
+//                maxBruteCount = (((maxBruteCount) > (bruteCount)) ? (maxBruteCount) : (bruteCount));
+//
+//                used++;
+//                contact++;
+//            }
+//
+// 
+//
+//
+//        }
+//
+//        // Add current interval to active list
+//        active.push_back(&current);
+//    }
+//    std::cout << "maxBruteCount: " << maxBruteCount << std::endl;
+//    return used;
+//}
 
 
 unsigned ParticleCollision::addContact(
     ParticleContact* contact,
-    unsigned limit
+    unsigned limit, float width, float height
 ) const
 {
     unsigned used = 0;
     const static float restitution = 1.0f; // 0.5f
+
+    int bruteCount = 0;
+    int maxBruteCount = 0;
 
     for (int i = 0; i < PARTICLE_COUNT; ++i) {
         for (int j = i + 1; j < PARTICLE_COUNT; ++j) {
@@ -44,6 +200,7 @@ unsigned ParticleCollision::addContact(
 
             Particle* A = particles[i];
             Particle* B = particles[j];
+
 
             Vector2 delta = A->getPosition() - B->getPosition();
             float distance = delta.magnitude();
@@ -61,9 +218,13 @@ unsigned ParticleCollision::addContact(
                 used++;
                 contact++;
             }
+
+            ++bruteCount;
+            maxBruteCount = (((maxBruteCount) > (bruteCount)) ? (maxBruteCount) : (bruteCount));
         }
     }
 
+    std::cout << "maxBruteCount: " << maxBruteCount << std::endl;
     return used;
 }
 
@@ -81,16 +242,16 @@ public:
     /**
      * Holds a pointer to the particles we're checking for collisions with.
      */
-    Particle* particles[PARTICLE_COUNT];
+    Particle* particles[PARTICLE_COUNT] = {};
 
     virtual unsigned addContact(
         ParticleContact* contact,
-        unsigned limit
+        unsigned limit, float width, float height
     ) const;
 };
 
 unsigned Platform::addContact(ParticleContact* contact,
-    unsigned limit) const
+    unsigned limit, float width, float height) const
 {
     // restitution controls how bouncy an object feels, restitution of 1 (perfectly bouncy).
     const static float restitution = 1.0f; // 0.5f
@@ -193,9 +354,9 @@ public:
 };
 
 // Method definitions
-BlobDemo::BlobDemo() :world(2, 1)
+BlobDemo::BlobDemo() :world(PARTICLE_COUNT, 0, INIT_WIDTH, INIT_HEIGHT)
 {
-    width = 400; height = 400;
+    width = INIT_WIDTH; height = INIT_HEIGHT;
     nRange = 100.0;
 
     // Create the blob storage array
@@ -212,8 +373,8 @@ BlobDemo::BlobDemo() :world(2, 1)
     // define each platform items start and end positions
     std::pair<Vector2, Vector2> platformPositions[PLATFORM_COUNT] = { 
         {Vector2(-50.0f, 10.0f), Vector2(50.0f, 0.0f)},
-        /*{Vector2(0.0f, -70.0f), Vector2(100.0f, -55.0f)},
-        {Vector2(-20.0f, -70.0f), Vector2(-70.0f, -55.0f)},*/
+        {Vector2(0.0f, -70.0f), Vector2(100.0f, -55.0f)},
+        {Vector2(-20.0f, -70.0f), Vector2(-70.0f, -55.0f)},
         {Vector2(-90.0f, 90.0f), Vector2(90.0f, 90.0f)},
         {Vector2(-90.0f, 90.0f), Vector2(-90.0f, -90.0f)},
         {Vector2(-90.0f, -90.0f), Vector2(90.0f, -90.00f)},
@@ -226,9 +387,6 @@ BlobDemo::BlobDemo() :world(2, 1)
     };
 
     for (int i = 0; i < PARTICLE_COUNT; ++i) {
-        //if (i == 0) blobs[i].setPosition(0.0, 90.0);
-        //else blobs[i].setPosition(30.0, 90.0);
-
         // Create the blob
         blobs[i].setRadius(5);
         blobs[i].setRandomPosition(blobs[i].getRadius(), 80.0f, 80.0f);
@@ -317,12 +475,8 @@ void BlobDemo::update()
     // Recenter the axes
     float duration = timeinterval / 1000;
 
-    //for (int i = 0; i < PLATFORM_COUNT; ++i) {
-    //    for (int j = 0; j < PARTICLE_COUNT; ++j) {
-    //        Particle* particle = platforms[i].particles[j];
-    //        std::cout << "ID: " << j << particle->toString() << std::endl;
-    //    }
-    //}
+    world.appWidth = Application::width;
+    world.appHeight = Application::height;
 
     // Run the simulation
     world.runPhysics(duration);

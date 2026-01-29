@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <pworld.h>
 
-ParticleWorld::ParticleWorld(unsigned maxContacts, unsigned iterations)
+ParticleWorld::ParticleWorld(unsigned maxContacts, unsigned iterations, int appWidth, int appHeight)
 :
 resolver(iterations),
 maxContacts(maxContacts)
@@ -26,7 +26,7 @@ unsigned ParticleWorld::generateContacts()
         g != contactGenerators.end();
         g++)
     {
-        unsigned used =(*g)->addContact(nextContact, limit);
+        unsigned used =(*g)->addContact(nextContact, limit, appWidth, appHeight);
         limit -= used;
         nextContact += used;
 

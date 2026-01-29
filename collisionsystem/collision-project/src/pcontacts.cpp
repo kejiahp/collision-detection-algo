@@ -1,4 +1,4 @@
-
+﻿
 #include <float.h>
 #include <pcontacts.h>
 
@@ -124,7 +124,17 @@ void ParticleContactResolver::resolveContacts(ParticleContact *contactArray,
         // Resolve this contact
         contactArray[maxIndex].resolve(duration);
         
-        //if (updatePenetration) updateInterpenetrations(contactArray, numContacts, maxIndex); // Might Delete Later
+        // The snippet below, keeps penetration values consistent across all contacts after one contact has been resolved
+        //Example:
+        //    Contact A resolves and moves particle P by + 0.5 units.
+        //    Contact B also involves particle P.
+        //    Contact B’s penetration value is now wrong, because P has moved.
+        //If you don’t update the other contacts :
+        //    The solver will think penetration is still large
+        //    It will over‑resolve or resolve in the wrong order
+        //    You get jitter, instability, or particles sticking together
+        // So the solver needs a way to propagate the movement from the resolved contact to all other contacts.
+        if (true) updateInterpenetrations(contactArray, numContacts, maxIndex); // This lin
 
         iterationsUsed++;
     }

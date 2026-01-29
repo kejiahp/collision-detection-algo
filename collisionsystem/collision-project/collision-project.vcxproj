@@ -141,6 +141,7 @@
     <ClInclude Include="include\pcollision.h" />
     <ClInclude Include="include\pcontacts.h" />
     <ClInclude Include="include\pworld.h" />
+    <ClInclude Include="include\quadtree.h" />
     <ClInclude Include="include\utils.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +153,7 @@
     <ClCompile Include="src\pcollision.cpp" />
     <ClCompile Include="src\pcontacts.cpp" />
     <ClCompile Include="src\pworld.cpp" />
+    <ClCompile Include="src\quadtree.cpp" />
     <ClCompile Include="src\sphere_demo.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
