@@ -125,13 +125,8 @@
          * Fills the given contact structure with the generated
          * contact. 
          */
-        virtual unsigned addContact(
-            ParticleContact* contact,
-            unsigned limit, float width=0.0f, float height=0.0f
-        ) const = 0;
-
-       /* virtual unsigned addContact(ParticleContact *contact,
-                                    unsigned limit) const = 0;*/
+        virtual unsigned addContact(ParticleContact *contact,
+                                    unsigned limit) const = 0;
 
     
     };

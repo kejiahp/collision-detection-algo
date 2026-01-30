@@ -14,9 +14,6 @@
         typedef std::vector<Particle*> Particles;
         typedef std::vector<ParticleContactGenerator*> ContactGenerators;
 
-        int appHeight;
-        int appWidth;
-
     protected:
         /**
          * Holds the particles
@@ -56,7 +53,7 @@
          * Creates a new particle simulator that can handle up to the
          * given number of contacts per frame. 
          */
-        ParticleWorld(unsigned maxContacts, unsigned iterations=0, int appWidth=0, int appHeight=0);
+        ParticleWorld(unsigned maxContacts, unsigned iterations=0);
 
         /**
          * Deletes the simulator.

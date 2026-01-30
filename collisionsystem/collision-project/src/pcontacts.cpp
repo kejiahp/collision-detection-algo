@@ -134,7 +134,7 @@ void ParticleContactResolver::resolveContacts(ParticleContact *contactArray,
         //    It will over‑resolve or resolve in the wrong order
         //    You get jitter, instability, or particles sticking together
         // So the solver needs a way to propagate the movement from the resolved contact to all other contacts.
-        if (true) updateInterpenetrations(contactArray, numContacts, maxIndex); // This lin
+        if (true) updateInterpenetrations(contactArray, numContacts, maxIndex);
 
         iterationsUsed++;
     }

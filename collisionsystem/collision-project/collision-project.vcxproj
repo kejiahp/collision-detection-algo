@@ -137,23 +137,24 @@
     <ClInclude Include="include\coreMath.h" />
     <ClInclude Include="include\custom_color.hpp" />
     <ClInclude Include="include\gl\glut.h" />
+    <ClInclude Include="include\main_demo.h" />
     <ClInclude Include="include\particle.h" />
     <ClInclude Include="include\pcollision.h" />
     <ClInclude Include="include\pcontacts.h" />
+    <ClInclude Include="include\pplatform.h" />
     <ClInclude Include="include\pworld.h" />
-    <ClInclude Include="include\quadtree.h" />
     <ClInclude Include="include\utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
-    <ClCompile Include="src\blob_demo.cpp" />
+    <ClCompile Include="src\main_demo.cpp" />
     <ClCompile Include="src\custom_color.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\particle.cpp" />
     <ClCompile Include="src\pcollision.cpp" />
     <ClCompile Include="src\pcontacts.cpp" />
+    <ClCompile Include="src\pplatform.cpp" />
     <ClCompile Include="src\pworld.cpp" />
-    <ClCompile Include="src\quadtree.cpp" />
     <ClCompile Include="src\sphere_demo.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>

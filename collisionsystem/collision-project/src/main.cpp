@@ -1,9 +1,8 @@
 #include <gl/glut.h>
 
-#include "app.h"
-extern Application* getApplication();
-Application* app;
+#include "main_demo.h"
 
+MainDemo* app = new MainDemo();
 
 void display(void)
 	{
@@ -34,15 +33,24 @@ void resize(int width, int height)
 int main(int argc, char* argv[])
     {
     glutInit(&argc, argv);
-    app = getApplication();
+
 	float  timeinterval = 10;
+
 	app->setTimeinterval(timeinterval);
-	createWindow("BLOB DEMO", app->getheight(), app->getwidth());
+
+	createWindow(app->getTitle(), app->getheight(), app->getwidth());
+
 	glutReshapeFunc(resize);
+
 	glutDisplayFunc(display); 
+
 	glutTimerFunc(timeinterval, TimerFunc, 1);
+
 	app->initGraphics();
+
 	glutMainLoop();
+
 	delete app; 
+
 	return 0;
     }

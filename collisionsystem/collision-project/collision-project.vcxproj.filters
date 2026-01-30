@@ -42,7 +42,10 @@
     <ClInclude Include="include\pcollision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\quadtree.h">
+    <ClInclude Include="include\pplatform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\main_demo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,13 +74,13 @@
     <ClCompile Include="src\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\blob_demo.cpp">
+    <ClCompile Include="src\main_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\pcollision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\quadtree.cpp">
+    <ClCompile Include="src\pplatform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
