@@ -1,14 +1,14 @@
 #include <algorithm>
-#include "iostream"
+#include <iostream>
 
 #include "pcollision.h"
 
-// BRUTE FORCE IMPLEMENTATION
 //unsigned ParticleCollision::addContact(
 //    ParticleContact* contact,
 //    unsigned limit
 //) const
 //{
+//    // BRUTE FORCE IMPLEMENTATION
 //    unsigned used = 0;
 //    const static float restitution = 1.0f; // 0.5f
 //
@@ -51,9 +51,9 @@
 //}
 
 
-// SWEEP (SORT) AND PRUNE IMPLEMENTATION
 unsigned ParticleCollision::addContact(ParticleContact* contact, unsigned limit) const
 {
+    //SWEEP (SORT) AND PRUNE IMPLEMENTATION
     if (limit == 0) return 0;
 
     // Build or update intervals
@@ -166,6 +166,6 @@ unsigned ParticleCollision::addContact(ParticleContact* contact, unsigned limit)
         active.push_back(&current);
     }
 
-    std::cout << "MAX SAP COUNT: " << maxSapCount << std::endl;
+    //std::cout << "MAX SAP COUNT: " << maxSapCount << std::endl;
     return used;
 }

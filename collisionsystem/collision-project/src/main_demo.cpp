@@ -1,7 +1,7 @@
 #include "main_demo.h"
 
 const Vector2 Vector2::GRAVITY = Vector2(0, -9.81);
-constexpr int PARTICLE_COUNT = 1000;
+constexpr int PARTICLE_COUNT = 10;
 constexpr int PLATFORM_COUNT = 7;
 constexpr int INIT_WIDTH = 500;
 constexpr int INIT_HEIGHT = 500;
@@ -10,7 +10,7 @@ constexpr int INIT_HEIGHT = 500;
 MainDemo::MainDemo() :world(PARTICLE_COUNT, 0)
 {
     width = INIT_WIDTH; height = INIT_HEIGHT;
-    nRange = 100.0;
+    nRange = 200.0;
 
     // Create the blob storage array
     blobs = new Particle[PARTICLE_COUNT];
@@ -28,10 +28,10 @@ MainDemo::MainDemo() :world(PARTICLE_COUNT, 0)
         {Vector2(-50.0f, 10.0f), Vector2(50.0f, 0.0f)},
         {Vector2(0.0f, -70.0f), Vector2(100.0f, -55.0f)},
         {Vector2(-20.0f, -70.0f), Vector2(-70.0f, -55.0f)},
-        {Vector2(-150.0f, 150.0f), Vector2(150.0f, 150.0f)},
-        {Vector2(-150.0f, 150.0f), Vector2(-150.0f, -150.0f)},
-        {Vector2(-150.0f, -150.0f), Vector2(150.0f, -150.0f)},
-        {Vector2(150.0f, -150.0f), Vector2(150.0f, 150.0f)},
+        {Vector2(-100.0f, 100.0f), Vector2(100.0f, 100.0f)},
+        {Vector2(-100.0f, 100.0f), Vector2(-100.0f, -100.0f)},
+        {Vector2(-100.0f, -100.0f), Vector2(100.0f, -100.0f)},
+        {Vector2(100.0f, -100.0f), Vector2(100.0f, 100.0f)},
         };
 
     for (int i = 0; i < PLATFORM_COUNT; ++i) {
@@ -41,13 +41,13 @@ MainDemo::MainDemo() :world(PARTICLE_COUNT, 0)
 
     for (int i = 0; i < PARTICLE_COUNT; ++i) {
         // Create the blob
-        blobs[i].setRadius(2);
-        blobs[i].setRandomPosition(blobs[i].getRadius(), 120.0f, 120.0f);
+        blobs[i].setRandomRadius(120.0f, 120.0f, true);
+        blobs[i].setRandomPosition(blobs[i].getRadius(), 90.0f, 90.0f);
         blobs[i].setRandomColor();
         blobs[i].setRandomVelocity(100.0f);
         //blobs[i].setVelocity(0, 0.0f);
         //blobs[i].setDamping(1.0);
-        //blobs[i].setAcceleration(Vector2::GRAVITY);
+        blobs[i].setAcceleration(Vector2::GRAVITY);
         blobs[i].setMass(100.0f);
         blobs[i].clearAccumulator();
 
@@ -76,9 +76,26 @@ MainDemo::MainDemo() :world(PARTICLE_COUNT, 0)
 
 MainDemo::~MainDemo()
 {
-    delete[] blobs;
-    delete[] platforms;
+    // Delete particle array
+    if (blobs) {
+        delete[] blobs;
+        blobs = nullptr;
+    }
+
+    // Delete platforms and the array holding them
+    if (platforms) {
+        for (int i = 0; i < PLATFORM_COUNT; ++i) {
+            delete platforms[i];   // delete each Platform*
+        }
+        delete[] platforms;         // delete the array of pointers
+        platforms = nullptr;
+    }
+
+    // Delete collision generator
+    delete particleCollision;
+    particleCollision = nullptr;
 }
+
 
 void MainDemo::display()
 {

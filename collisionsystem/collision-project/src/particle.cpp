@@ -1,5 +1,6 @@
 #include <math.h>
 #include <assert.h>
+#include <iostream>
 
 #include "particle.h"
 #include "utils.hpp"
@@ -160,12 +161,16 @@ customcolor::Color Particle::getColor() const {
     return color;
 };
 
-void Particle::setRandomRadius(int boundW, int boundH) {
+void Particle::setRandomRadius(int boundW, int boundH, bool makeSmall) {
+    if (makeSmall) {
+        setRadius(static_cast<float>(utils::random_in_range(2, 10))); 
+        return;
+    }
     // find the smallest boundary value
     int smallestBoundary = boundW > boundH ? boundH : boundW;
     // check if 1/4 the smallest boundary is gte to 10
-    int rangeMin = smallestBoundary / 4 >= 10 ? 10 : 1;
-    setRadius(static_cast<float>(utils::random_in_range(rangeMin, smallestBoundary / 8)));
+    int rangeMin = (smallestBoundary / 4) >= 10 ? 10 : 1;
+    setRadius(static_cast<float>(utils::random_in_range(rangeMin, smallestBoundary / 4)));
 };
 
 

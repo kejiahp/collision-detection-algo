@@ -1,5 +1,4 @@
-﻿
-#include <float.h>
+﻿#include <float.h>
 #include <pcontacts.h>
 
 

@@ -2,7 +2,7 @@
 
 [X] Particles rolling on platforms start to phase through the Platforms. Making platforms not as solid as they should be.
 
-[ ] Rework the random radius generator.
+[X] Rework the random radius generator.
 
 [ ] Document the codebase, with comments.
 

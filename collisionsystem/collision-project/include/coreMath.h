@@ -254,7 +254,9 @@ class Vector2
         }
 
         /** Checks if the speed of particle is close enough to zero*/
-        bool isNearZero(float eps = 1e-4f) const { return squareMagnitude() < eps * eps; }
+        bool isNearZero(float eps = 1e-4f) const { 
+            return squareMagnitude() < eps * eps;
+        }
 
         /**
         * @brief Returns a string representation of the Vector, display its x and y values.
