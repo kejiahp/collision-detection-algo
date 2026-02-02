@@ -1,4 +1,3 @@
-
 #include <gl/glut.h>
 #include "app.h"
 

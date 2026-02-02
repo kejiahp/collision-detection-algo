@@ -13,6 +13,11 @@
  */
 class Platform : public ParticleContactGenerator
 {
+private:
+    /**
+    * @brief Restitution controls how bouncy an object feels, restitution of 1 (perfectly bouncy).
+    */
+    const float restitution;
 public:
     /**
      * @brief Starting point of the platform line segment.
@@ -46,9 +51,9 @@ public:
      * @param particle_count Number of particles that will be checked for
      *        collisions with this platform.
      */
-    Platform(int particle_count)
+    Platform(int particle_count, float restitution)
         : PARTICLE_COUNT(particle_count),
-        particles(new Particle* [particle_count])
+        particles(new Particle* [particle_count]), restitution(restitution)
     {
     }
 

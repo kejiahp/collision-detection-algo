@@ -16,6 +16,11 @@
  * temporal coherence between frames.
  */
 class ParticleCollision : public ParticleContactGenerator {
+private:
+    /**
+    * @brief Restitution controls how bouncy an object feels, restitution of 1 (perfectly bouncy). 
+    */
+    const float restitution;
 public:
 
     /**
@@ -50,9 +55,9 @@ public:
      *
      * @param particle_count Number of particles to track for collisions.
      */
-    ParticleCollision(int particle_count)
+    ParticleCollision(int particle_count, float restitution)
         : PARTICLE_COUNT(particle_count),
-        particles(new Particle* [particle_count])
+        particles(new Particle* [particle_count]), restitution(restitution)
     {
     }
 

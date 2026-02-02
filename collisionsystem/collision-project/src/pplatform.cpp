@@ -3,9 +3,6 @@
 
 unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const
 {
-    // restitution controls how bouncy an object feels, restitution of 1 (perfectly bouncy).
-    const static float restitution = 1.0f; // 0.5f
-
     // this helps travers the contact resolver array
     unsigned int used = 0;
 

@@ -111,7 +111,6 @@ unsigned ParticleCollision::addContact(ParticleContact* contact, unsigned limit)
     }
 
     unsigned used = 0;
-    float restitution = 1.0f;
     int sapCount = 0;
     int maxSapCount = 0;
     std::vector<Interval*> active;
