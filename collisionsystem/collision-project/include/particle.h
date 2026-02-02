@@ -5,6 +5,16 @@
 #include "custom_color.hpp"
 
 /**
+* @brief Enum reperesenting the various shapes that particles within this system can take.
+*/
+enum class ParticleShape {
+    SPHERE = 0,
+    TRIANGLE = 1,
+    SQUARE = 2,
+    PENTAGON = 3,
+};
+
+/**
 * @brief Represents a basic physics particle with position, velocity,
 *        acceleration, mass, radius, and color.
 *
@@ -65,6 +75,11 @@ protected:
      * @brief Color assigned to the particle.
      */
     customcolor::Color color;
+
+    /**
+    * @brief ParticleShape assigned to the particle
+    */
+    ParticleShape shape;
 
 public:
     // --- Position ---
@@ -131,6 +146,21 @@ public:
      * @param y Y‑component.
      */
     void setVelocity(const float x, const float y);
+
+    /**
+    * @brief Sets the particle's shape by randomly selecting from an option of 4 shapes, Sphere, Triangle, Square or Pentagon.
+    */
+    void setRandomParticleShape();
+
+    /**
+    * @brief Sets the particle's shape.
+    */
+    void setParticleShape(const ParticleShape& shape);
+
+    /**
+    * @brief Retrieves the particle's shape.
+    */
+    ParticleShape getParticleShape() const;
 
     /**
      * @brief Retrieves the particle's current velocity.

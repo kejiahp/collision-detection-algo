@@ -14,4 +14,8 @@
 
 [ ] Work on report. Might use AI for this.
 
+[x] Added other shapes to the project, particularly spheres, rectangles, squares and polygons.
+
+[x] Set a cap on the velocity of particles.
+
 [ ] Update github documentation of this project and include screenshots.
