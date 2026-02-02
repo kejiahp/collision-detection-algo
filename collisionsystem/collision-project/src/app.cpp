@@ -1,8 +1,16 @@
-
 #include <gl/glut.h>
 #include "app.h"
-#include <iostream>
 
+
+int Application::getwidth()
+{
+	return width;
+}
+
+int Application::getheight()
+{
+	return height;
+}
 
 void Application::initGraphics()
 {
@@ -36,9 +44,6 @@ void Application::resize(int width, int height)
 	{
 	GLfloat nRange = 100.0f;
 	GLfloat aspectRatio = (GLfloat)width / (GLfloat)height;
-
-	/*std::cout << "width: " << width << std::endl;
-	std::cout << "height: " << height << std::endl;*/
 
 	// Prevent a divide by zero
 	if (height == 0) height = 1;

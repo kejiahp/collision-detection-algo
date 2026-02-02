@@ -1,5 +1,6 @@
 #include <math.h>
 #include <assert.h>
+#include <iostream>
 
 #include "particle.h"
 #include "utils.hpp"
@@ -12,6 +13,10 @@ float Particle::getRadius() const
 void Particle::integrate(float duration) {
     assert(duration > 0.0);
     if (inverseMass <= 0.0f) return;
+
+    //if (velocity.isNearZero()) {
+    //    velocity.clear(); // sets x = y = 0
+    //}
 
     // work out the acceleration from the force
     Vector2 resultingAcc = acceleration;
@@ -62,6 +67,10 @@ void Particle::setPosition(const float x, const float y)
 {
     position.x = x;
     position.y = y;
+}
+
+void Particle::setPosition(const Vector2& position) {
+    this->position = position;
 }
 
 
@@ -152,16 +161,20 @@ customcolor::Color Particle::getColor() const {
     return color;
 };
 
-void Particle::setRandomRadius(int boundW, int boundH) {
+void Particle::setRandomRadius(int boundW, int boundH, bool makeSmall) {
+    if (makeSmall) {
+        setRadius(static_cast<float>(utils::random_in_range(2, 10))); 
+        return;
+    }
     // find the smallest boundary value
     int smallestBoundary = boundW > boundH ? boundH : boundW;
     // check if 1/4 the smallest boundary is gte to 10
-    int rangeMin = smallestBoundary / 4 >= 10 ? 10 : 1;
-    setRadius(static_cast<float>(utils::random_in_range(rangeMin, smallestBoundary / 2)));
+    int rangeMin = (smallestBoundary / 4) >= 10 ? 10 : 1;
+    setRadius(static_cast<float>(utils::random_in_range(rangeMin, smallestBoundary / 4)));
 };
 
 
-void Particle::setRandomPosition(float radius, int boundW, int boundH) {
+void Particle::setRandomPosition(float radius, float boundW, float boundH) {
     boundW = boundW - radius;
     boundH = boundH - radius;
     float x = static_cast<float>(utils::random_in_range(-boundW, boundW));
@@ -174,3 +187,10 @@ void Particle::setRandomVelocity(float maxVelocity) {
     float y = static_cast<float>(utils::random_in_range(-maxVelocity, maxVelocity));
     setVelocity(x, y);
 };
+
+std::string Particle::toString() const {
+    return "{Acceleration: " + acceleration.toString() + ",Velocity: " + velocity.toString()  
+        + ",Position: " + position.toString()  + ",Radius: " + std::to_string(radius) 
+        + ",Damping: " + std::to_string(damping) 
+        + ",Mass: " + std::to_string(getMass()) + ",InverseMass: " + std::to_string(inverseMass) + '}';
+}

@@ -45,6 +45,9 @@
          */
         float penetration;
 
+        /***/
+        Vector2 particleMovement[2];
+
 
     protected:
         /**
@@ -62,6 +65,10 @@
          * Handles the impulse calculations for this collision.
          */
         void resolveVelocity(float duration);
+        /**
+        * Handles 
+        */
+        void resolveInterpenetration(float duration);
 
     };
 
@@ -102,6 +109,9 @@
         void resolveContacts(ParticleContact *contactArray,
             unsigned numContacts,
             float duration);
+
+        void updateInterpenetrations(ParticleContact* contactArray,
+            unsigned numContacts, unsigned maxIndex);
     };
 
     /**
@@ -117,6 +127,8 @@
          */
         virtual unsigned addContact(ParticleContact *contact,
                                     unsigned limit) const = 0;
+
+    
     };
 
 	

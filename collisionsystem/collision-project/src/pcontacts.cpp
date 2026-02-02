@@ -1,5 +1,4 @@
-
-#include <float.h>
+﻿#include <float.h>
 #include <pcontacts.h>
 
 
@@ -7,6 +6,7 @@
 void ParticleContact::resolve(float duration)
 {
     resolveVelocity(duration);
+    resolveInterpenetration(duration);
 }
 
 float ParticleContact::calculateSeparatingVelocity() const
@@ -58,6 +58,32 @@ void ParticleContact::resolveVelocity(float duration)
     }
 }
 
+void ParticleContact::resolveInterpenetration(float duration) {
+    // If we don't have any penetration, skip this step.
+    if (penetration <= 0) return;
+    // The movement of each object is based on their inverse mass, so
+    // total that.
+    float totalInverseMass = particle[0]->getInverseMass();
+    if (particle[1]) totalInverseMass += particle[1]->getInverseMass();
+    // If all particles have infinite mass, then we do nothing
+    if (totalInverseMass <= 0) return;
+    // Find the amount of penetration resolution per unit of inverse mass
+    Vector2 movePerIMass = contactNormal * (penetration / totalInverseMass);
+    // Calculate the the movement amounts
+    particleMovement[0] = movePerIMass * particle[0]->getInverseMass();
+    if (particle[1]) {
+        particleMovement[1] = movePerIMass * -particle[1]->getInverseMass();
+    }
+    else {
+        particleMovement[1].clear();
+    }
+    // Apply the penetration resolution
+    particle[0]->setPosition(particle[0]->getPosition() + particleMovement[0]);
+    if (particle[1]) {
+        particle[1]->setPosition(particle[1]->getPosition() + particleMovement[1]);
+    }
+}
+
 ParticleContactResolver::ParticleContactResolver(unsigned iterations)
 :
 iterations(iterations)
@@ -96,8 +122,48 @@ void ParticleContactResolver::resolveContacts(ParticleContact *contactArray,
 
         // Resolve this contact
         contactArray[maxIndex].resolve(duration);
+        
+        // The snippet below, keeps penetration values consistent across all contacts after one contact has been resolved
+        //Example:
+        //    Contact A resolves and moves particle P by + 0.5 units.
+        //    Contact B also involves particle P.
+        //    Contact B’s penetration value is now wrong, because P has moved.
+        //If you don’t update the other contacts :
+        //    The solver will think penetration is still large
+        //    It will over‑resolve or resolve in the wrong order
+        //    You get jitter, instability, or particles sticking together
+        // So the solver needs a way to propagate the movement from the resolved contact to all other contacts.
+        if (true) updateInterpenetrations(contactArray, numContacts, maxIndex);
 
         iterationsUsed++;
     }
 
+}
+
+
+void ParticleContactResolver::updateInterpenetrations(ParticleContact* contactArray,
+    unsigned numContacts, unsigned maxIndex) {
+    Vector2* move = contactArray[maxIndex].particleMovement;
+    for (int i = 0; i < numContacts; i++)
+    {
+        if (contactArray[i].particle[0] == contactArray[maxIndex].particle[0])
+        {
+            contactArray[i].penetration -= move[0] * contactArray[i].contactNormal;
+        }
+        else if (contactArray[i].particle[0] == contactArray[maxIndex].particle[1])
+        {
+            contactArray[i].penetration -= move[1] * contactArray[i].contactNormal;
+        }
+        if (contactArray[i].particle[1])
+        {
+            if (contactArray[i].particle[1] == contactArray[maxIndex].particle[0])
+            {
+                contactArray[i].penetration += move[0] * contactArray[i].contactNormal;
+            }
+            else if (contactArray[i].particle[1] == contactArray[maxIndex].particle[1])
+            {
+                contactArray[i].penetration += move[1] * contactArray[i].contactNormal;
+            }
+        }
+    }//for
 }

@@ -1,48 +1,54 @@
 #include <gl/glut.h>
 
-#include "app.h"
-extern Application* getApplication();
-Application* app;
+#include "main_demo.h"
 
+static MainDemo app;
 
-void display(void)
-	{
-	app->display();
-	}
-
-
-void TimerFunc(int value)
+static void display(void)
 {
-	app->update();
-	float  timeinterval = app->getTimeinterval();
+	app.display();
+}
+
+
+static void TimerFunc(int value)
+{
+	app.update();
+	float  timeinterval = app.getTimeinterval();
 	glutTimerFunc(timeinterval, TimerFunc, 1);
 }
 
-void createWindow(const char* title)
+static void createWindow(const char* title, int h, int w)
 {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(600, 600);
+    glutInitWindowSize(h, w);
     glutCreateWindow(title);
 }
 
 
-void resize(int width, int height)
+static void resize(int width, int height)
 {
-    app->resize(width, height);
+    app.resize(width, height);
 }
 
 int main(int argc, char* argv[])
-    {
-    glutInit(&argc, argv);
-    app = getApplication();
+{
+	glutInit(&argc, argv);
+
 	float  timeinterval = 10;
-	app->setTimeinterval(timeinterval);
-	createWindow("Sphere");
+
+	app.setTimeinterval(timeinterval);
+
+	createWindow(app.getTitle(), app.getheight(), app.getwidth());
+
 	glutReshapeFunc(resize);
+
 	glutDisplayFunc(display); 
+
 	glutTimerFunc(timeinterval, TimerFunc, 1);
-	app->initGraphics();
+
+	app.initGraphics();
+
 	glutMainLoop();
-	delete app; 
+
 	return 0;
-    }
+}

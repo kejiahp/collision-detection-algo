@@ -1,6 +1,3 @@
-/*
- *
- */
 #ifndef PWORLD_H
 #define PWORLD_H
 

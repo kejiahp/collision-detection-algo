@@ -2,6 +2,7 @@
 // draw a single sphere in the middle of the screen
 // OO basic
 
+/*
 #include <gl/glut.h>// OpenGL toolkit
 #include <app.h>// OpenGL toolkit
 #include "particle.h"
@@ -10,6 +11,7 @@
 
 static constexpr int NO_OF_PARTICLES = 3;
 
+
 class SphereDemo : public Application
 {
 	Particle particles[NO_OF_PARTICLES];
@@ -17,7 +19,7 @@ public:
 	SphereDemo();
 	virtual void display();
 	virtual void update();
-	/*
+	
 	* Method to deflect the particle off the box boundary on collision
 	*
 	* @param p Represents the particle
@@ -25,9 +27,9 @@ public:
 	* @param boundaryWidth Represents the viewport width
 	*
 	* @param boundaryHeight Represents the viewport height
-	*/
+	
 	void box_boundary_collision_resolve(Particle& p, int boundaryWidth, int boundaryHeight);
-	/*
+	
 	* Detect particle viewport collision
 	*
 	Apparently in graphics libraries the top-left is the (x=0,y=0) coordinate, not the center of the viewport.
@@ -39,9 +41,9 @@ public:
 	* @param boundaryHeight Represents the viewport height
 	*
 	* @return `bool` hit
-	*/
+	
 	bool out_of_box_test(Particle p, int boundaryWidth, int boundaryHeight);
-	/*
+	
 	* Method to draw out of bound particles within boundaries
 	*
 	* @param p Represents the particle
@@ -49,7 +51,7 @@ public:
 	* @param boundaryWidth Represents the viewport width
 	*
 	* @param boundaryHeight Represents the viewport height
-	*/
+	
 	void out_of_box_resolve(Particle& p, int boundaryWidth, int boundaryHeight);
 };
 
@@ -57,31 +59,31 @@ public:
 SphereDemo::SphereDemo()
 {
 	// the starting width and heigh of th indow should always be 100
-	width = 100; height = 100;
+	width = 400; height = 400;
 
 	//for (Particle& p : particles) {
 	for (int i = 0; i < sizeof(particles) / sizeof(Particle); ++i) {
 		Particle& p = particles[i];
 
-		p.setRandomColor();
-		p.setVelocity(0, 0);
-		p.setAcceleration(0, 0);
+		// p.setRandomColor();
+		// p.setVelocity(0, 0);
+		// p.setAcceleration(0, 0);
 
-		if ((i + 1) == 3) {
-			p.setRadius(15);
-			p.setMass(p.computeMassFromRadius(p.getRadius()));
-			p.setPosition(width - (p.getRadius() + 1), height - (p.getRadius() + 1));
-		}
-		else if ((i + 1) == 2) {
-			p.setRadius(10);
-			p.setMass(p.computeMassFromRadius(p.getRadius()));
-			p.setPosition(0, height - (p.getRadius() + 1));
-		} 
-		else {
-			p.setRadius(30);
-			p.setMass(p.computeMassFromRadius(p.getRadius()));
-			p.setPosition(-width + (p.getRadius() + 1), height - (p.getRadius() + 1));
-		}
+		//if ((i + 1) == 3) {
+		//	p.setRadius(15);
+		//	p.setMass(p.computeMassFromRadius(p.getRadius()));
+		//	p.setPosition(width - (p.getRadius() + 1), height - (p.getRadius() + 1));
+		//}
+		//else if ((i + 1) == 2) {
+		//	p.setRadius(10);
+		//	p.setMass(p.computeMassFromRadius(p.getRadius()));
+		//	p.setPosition(0, height - (p.getRadius() + 1));
+		//} 
+		//else {
+		//	p.setRadius(30);
+		//	p.setMass(p.computeMassFromRadius(p.getRadius()));
+		//	p.setPosition(-width + (p.getRadius() + 1), height - (p.getRadius() + 1));
+		//}
 
 		//if ((i + 1) != 2) {
 		//p.setRadius(10);
@@ -94,11 +96,12 @@ SphereDemo::SphereDemo()
 		//p.setPosition(-width + (p.getRadius() + 1), height - (p.getRadius() + 1));
 		//}
 
-
-		//p.setRandomRadius(width, height);
-		//p.setRandomColor();
-		//p.setRandomPosition(p.getRadius(), width, height);
-		//p.setRandomVelocity(static_cast<float>(width));
+		p.setRandomRadius(width, height);
+		p.setMass(p.computeMassFromRadius(p.getRadius()));
+		p.setRandomColor();
+		p.setRandomPosition(p.getRadius(), width, height);
+		p.setRandomVelocity(static_cast<float>(width));
+		//p.setAcceleration(10.0f, 10.0f);
 	}
 }
 
@@ -151,8 +154,8 @@ void SphereDemo::update(void)
 		
 		p.addForce(p.getGravityForce());
 		Vector2 drag = p.getDragForce();
-		std::cout << "radius: " + std::to_string(p.getRadius()) + " mass: " + std::to_string(p.getMass()) + " bottompos: " + std::to_string(p.getPosition().y - p.getRadius()) + " speed: " + std::to_string(p.getVelocity().magnitude()) << "drag x: " << drag.x << " drag y: " << drag.y << std::endl;
-		p.addForce(drag);
+		//std::cout << "radius: " + std::to_string(p.getRadius()) + " mass: " + std::to_string(p.getMass()) + " bottompos: " + std::to_string(p.getPosition().y - p.getRadius()) + " speed: " + std::to_string(p.getVelocity().magnitude()) << "drag x: " << drag.x << " drag y: " << drag.y << std::endl;
+		//p.addForce(drag);
 		
 		p.integrate(duration);
 		box_boundary_collision_resolve(p, width, height);
@@ -181,13 +184,9 @@ void SphereDemo::display(void)
 	glutSwapBuffers();
 }
 
-Application* getApplication()
-{
-    return new SphereDemo();
-}
+//Application* getApplication()
+//{
+//    return new SphereDemo();
+//}
 
-
-
-
-
-
+*/
