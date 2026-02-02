@@ -89,6 +89,18 @@ void Particle::setVelocity(const float x, const float y)
     velocity.y = y;
 }
 
+void Particle::setRandomParticleShape() {
+    shape = static_cast<ParticleShape>(utils::random_in_range(0, 3));
+};
+
+void Particle::setParticleShape(const ParticleShape& shape) {
+    this->shape = shape;
+};
+
+ParticleShape Particle::getParticleShape() const {
+    return shape;
+}
+
 Vector2 Particle::getVelocity() const
 {
     return velocity;

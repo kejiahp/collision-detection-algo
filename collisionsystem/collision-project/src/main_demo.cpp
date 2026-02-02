@@ -1,7 +1,7 @@
 #include "main_demo.h"
 
 const Vector2 Vector2::GRAVITY = Vector2(0, -9.81);
-constexpr int PARTICLE_COUNT = 1000;
+constexpr int PARTICLE_COUNT = 500;
 constexpr int PLATFORM_COUNT = 7;
 /**
 * @breif Restitution controls how bouncy an object feels, restitution of 1 (perfectly bouncy).
@@ -38,23 +38,6 @@ MainDemo::MainDemo() :world(PARTICLE_COUNT, 0)
         { Vector2(150.0f,  100.0f), Vector2(150.0f, -100.0f) }
         };
 
-    //// rectangle200by200
-    //    { Vector2(-100.0f, 100.0f), Vector2(100.0f, 100.0f) },
-    //    { Vector2(-100.0f, 100.0f), Vector2(-100.0f, -100.0f) },
-    //    { Vector2(-100.0f, -100.0f), Vector2(100.0f, -100.0f) },
-    //    { Vector2(100.0f, -100.0f), Vector2(100.0f, 100.0f) },
-
-    //// rectangle300by150
-    //    // Top edge
-    //    { Vector2(-150.0f,  75.0f), Vector2(150.0f,  75.0f) },
-    //    // Bottom edge
-    //    { Vector2(-150.0f, -75.0f), Vector2(150.0f, -75.0f) },
-    //    // Left edge
-    //    { Vector2(-150.0f,  75.0f), Vector2(-150.0f, -75.0f) },
-    //    // Right edge
-    //    { Vector2(150.0f,  75.0f), Vector2(150.0f, -75.0f) }
-
-
 
     for (int i = 0; i < PLATFORM_COUNT; ++i) {
         platforms[i]->start = platformPositions[i].first;
@@ -64,16 +47,15 @@ MainDemo::MainDemo() :world(PARTICLE_COUNT, 0)
     for (int i = 0; i < PARTICLE_COUNT; ++i) {
         // Create the blob
         //blobs[i].setRandomRadius(120.0f, 120.0f, true);
-        blobs[i].setRadius(2);
+        blobs[i].setRadius(3);
         blobs[i].setRandomPosition(blobs[i].getRadius(), 100.0f, 100.0f);
         blobs[i].setRandomColor();
-        blobs[i].setRandomVelocity(100.0f);
-        //blobs[i].setVelocity(0, 0.0f);
+        blobs[i].setRandomParticleShape();
+        blobs[i].setRandomVelocity(50.0f);
         //blobs[i].setDamping(1.0);
         //blobs[i].setAcceleration(Vector2::GRAVITY);
         blobs[i].setMass(100.0f);
         blobs[i].clearAccumulator();
-
         // Add blob to the world particles
         world.getParticles().push_back(&blobs[i]);
     }
@@ -139,7 +121,22 @@ void MainDemo::display()
         customcolor::Color pcolor = blobs[i].getColor();
         glColor3ub(pcolor.r, pcolor.g, pcolor.b);
         glTranslatef(blobs[i].getPosition().x, blobs[i].getPosition().y, 0.0f);
-        glutSolidSphere(blobs[i].getRadius(), 12, 12);
+        // The set the shape of the rendered particle
+        switch (blobs[i].getParticleShape()) {
+            case ParticleShape::PENTAGON:
+                glutSolidSphere(blobs[i].getRadius(), 5, 5);
+                break;
+            case ParticleShape::SQUARE:
+                glutSolidSphere(blobs[i].getRadius(), 4, 4);
+                break;
+            case ParticleShape::TRIANGLE:
+                glutSolidSphere(blobs[i].getRadius(), 3, 3);
+                break;
+            default:
+                glutSolidSphere(blobs[i].getRadius(), blobs[i].getRadius() * 5, blobs[i].getRadius() * 5);
+                break;
+        }
+
         glPopMatrix();
     }
 

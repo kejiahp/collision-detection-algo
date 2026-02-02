@@ -4,14 +4,18 @@
 
 [X] Rework the random radius generator.
 
-[ ] Document the codebase, with comments.
+[X] Document the codebase, with comments.
 
-[ ] Ensure memory clean up is solid, leave nothing behind.
+[X] Ensure memory clean up is solid, leave nothing behind.
 
-[ ] Clean up codebase remove unused comments.
+[X] Clean up codebase remove unused comments.
 
-[ ] Make a demo ready version. Different radius, velocities different possitions and maybe acceleration.
+[X] Make a demo ready version. Different radius, velocities different possitions and maybe acceleration.
 
 [ ] Work on report. Might use AI for this.
+
+[x] Added other shapes to the project, particularly spheres, rectangles, squares and polygons.
+
+[x] Set a cap on the velocity of particles.
 
 [ ] Update github documentation of this project and include screenshots.
