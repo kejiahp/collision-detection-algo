@@ -1,20 +1,44 @@
-# 2D Rigid Body Collision Detection and Response (C++ / OpenGL)
+# Particle Collision & Resolution System (Sweep‑and‑Prune Physics Engine)
 
-This project implements a 2D rigid body collision detection and response system in C++, using OpenGL for real-time visualisation. It models basic physical behaviour including gravity, drag, and elastic collisions within a confined window.
-
+A real‑time 2D particle physics simulation implemented in modern C++ and OpenGL/GLUT.
+The system demonstrates efficient collision detection, robust collision response, and visually rich particle behaviour using a modular physics engine architecture.
 
 ---
 
 ## Features
 
-- **2D rigid bodies:** Configurable position, mass, velocity, acceleration, and geometry.
-- **Collision detection:** Intersection tests between moving objects.
-- **Collision response:** Physically based resolution using laws of motion.
-- **Forces:** Gravity and drag integrated into the simulation loop.
-- **Boundary handling:** Objects constrained within the window bounds.
-- **Object-oriented design:** Polymorphism, inheritance, and clear class hierarchies.
-- **Visualisation:** Real-time rendering with OpenGL.
-- **Design diagrams:** UML diagrams (StarUML) for architecture and algorithm logic.
+### Physics & Simulation
+- 500+ real‑time simulated particles
+
+- Sweep‑and‑Prune (SAP) broad‑phase collision detection
+
+- Circle–circle narrow‑phase collision detection
+
+- Line‑segment platform collision detection
+
+- Impulse‑based collision response
+
+- Iterative contact solver with penetration correction
+
+- Support for drag forces and damping
+
+- Stable multi‑contact resolution
+
+
+### Rendering & Visualisation
+- OpenGL/GLUT‑based rendering
+
+- Randomised particle:
+
+	- Colours
+
+	- Velocities
+
+	- Shapes (triangle, square, pentagon, sphere)
+
+- Visual debugging of platforms and particle interactions
+
+
 
 ---
 
@@ -22,23 +46,53 @@ This project implements a 2D rigid body collision detection and response system 
 
 - **Language:** C++
 - **Graphics:** OpenGL
-- **Design:** StarUML (UML class and sequence diagrams)
-- **Paradigm:** Object-oriented programming with polymorphism and inheritance
 
 ---
 
 ## Core concepts
 
-- **Rigid body model:** Each object has:
-  - Initial position and velocity
-  - Mass and acceleration
-  - Geometric shape for collision checks
-- **Simulation loop:**
-  1. Apply forces (gravity, drag)
-  2. Integrate motion
-  3. Detect collisions (object–object and object–bounds)
-  4. Resolve collisions sequentially
-  5. Render frame with OpenGL
+### Sweep‑and‑Prune Broad‑Phase
+
+Efficiently reduces collision checks from $$O(n^2)$$ to near‑linear time by:
+
+- Sorting bounding intervals along the X‑axis
+
+- Maintaining an active list of overlapping intervals
+
+- Pruning non‑overlapping pairs early
+
+- Using insertion sort for temporal coherence
+
+
+### Impulse‑Based Collision Response
+
+Implements classical physics:
+
+- Separating velocity calculation
+
+- Restitution‑based rebound
+
+- Impulse distribution proportional to inverse mass
+
+- Positional correction to prevent sinking or jitter
+
+### Iterative Contact Resolution
+
+Resolves multiple simultaneous collisions by:
+
+- Selecting the contact with the largest closing velocity
+
+- Resolving velocity and penetration
+
+- Propagating corrections across all contacts
+
+### Modular Contact Generators
+Two collision generators feed the physics world:
+
+- `Platform` => particle vs. static line segment
+
+- `ParticleCollision` => particle vs. particle (SAP)
+
  
 ## Getting started
 

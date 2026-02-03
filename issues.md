@@ -12,10 +12,10 @@
 
 [X] Make a demo ready version. Different radius, velocities different possitions and maybe acceleration.
 
-[ ] Work on report. Might use AI for this.
+[x] Work on report.
 
 [x] Added other shapes to the project, particularly spheres, rectangles, squares and polygons.
 
 [x] Set a cap on the velocity of particles.
 
-[ ] Update github documentation of this project and include screenshots.
+[x] Update github documentation of this project and include screenshots.
