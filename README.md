@@ -3,6 +3,9 @@
 A real‑time 2D particle physics simulation implemented in modern C++ and OpenGL/GLUT.
 The system demonstrates efficient collision detection, robust collision response, and visually rich particle behaviour using a modular physics engine architecture.
 
+[![Demo with 1000 particles](https://github.com/kejiahp/collision-detection-algo/blob/c73de656b783289005ac347642838febc674041d/assets/s2026-02-02.png)](https://github.com/kejiahp/collision-detection-algo/blob/c73de656b783289005ac347642838febc674041d/assets/sr2026-02-02.mp4)
+
+
 ---
 
 ## Features
