@@ -19,8 +19,6 @@ The system demonstrates efficient collision detection, robust collision response
 
 - Line‑segment platform collision detection
 
-- Impulse‑based collision response
-
 - Iterative contact solver with penetration correction
 
 - Support for drag forces and damping
@@ -39,63 +37,10 @@ The system demonstrates efficient collision detection, robust collision response
 
 	- Shapes (triangle, square, pentagon, sphere)
 
-- Visual debugging of platforms and particle interactions
-
-
-
----
-
 ## Technologies
 
 - **Language:** C++
 - **Graphics:** OpenGL
-
----
-
-## Core concepts
-
-### Sweep‑and‑Prune Broad‑Phase
-
-Efficiently reduces collision checks from $$O(n^2)$$ to near‑linear time by:
-
-- Sorting bounding intervals along the X‑axis
-
-- Maintaining an active list of overlapping intervals
-
-- Pruning non‑overlapping pairs early
-
-- Using insertion sort for temporal coherence
-
-
-### Impulse‑Based Collision Response
-
-Implements classical physics:
-
-- Separating velocity calculation
-
-- Restitution‑based rebound
-
-- Impulse distribution proportional to inverse mass
-
-- Positional correction to prevent sinking or jitter
-
-### Iterative Contact Resolution
-
-Resolves multiple simultaneous collisions by:
-
-- Selecting the contact with the largest closing velocity
-
-- Resolving velocity and penetration
-
-- Propagating corrections across all contacts
-
-### Modular Contact Generators
-Two collision generators feed the physics world:
-
-- `Platform` => particle vs. static line segment
-
-- `ParticleCollision` => particle vs. particle (SAP)
-
  
 ## Getting started
 
