@@ -9,15 +9,11 @@ The system demonstrates efficient collision detection, robust collision response
 ---
 
 ## Features
-
-### Physics & Simulation
-- 500+ real‑time simulated particles
+- 1000+ real‑time simulated particles (**YES, I managed to scale it to 1500+ particles😁**)
 
 - Sweep‑and‑Prune (SAP) broad‑phase collision detection
 
 - Circle–circle narrow‑phase collision detection
-
-- Line‑segment platform collision detection
 
 - Iterative contact solver with penetration correction
 
@@ -25,8 +21,6 @@ The system demonstrates efficient collision detection, robust collision response
 
 - Stable multi‑contact resolution
 
-
-### Rendering & Visualisation
 - OpenGL/GLUT‑based rendering
 
 - Randomised particle:
@@ -39,7 +33,7 @@ The system demonstrates efficient collision detection, robust collision response
 
 ## Technologies
 
-- **Language:** C++
+- **Language:** C/C++
 - **Graphics:** OpenGL
  
 ## Getting started
